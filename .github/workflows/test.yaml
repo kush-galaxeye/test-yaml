@@ -29,3 +29,12 @@ jobs:
           docker build -t testyaml .
           docker tag testyaml:latest 046307157488.dkr.ecr.ap-south-1.amazonaws.com/testyaml:latest
           docker push 046307157488.dkr.ecr.ap-south-1.amazonaws.com/testyaml:latest
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: ${{ secrets.ROLE }} # needs permissions to write to the event bus
+      - uses: tshauck/gh-action-event-to-aws-eventbridge@main # see the releases for tags
+        with:
+          event_bus_name: "openSourceBus"
+          resources: "com.testYaml"
